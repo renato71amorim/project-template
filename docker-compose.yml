@@ -1,0 +1,49 @@
+services:
+  php:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: ${PROJECT_NAME}-php
+    env_file:
+      - .env
+    volumes:
+      - ./app:/var/www/html:cached
+      - ./php.ini:/usr/local/etc/php/php.ini
+    expose:
+      - "80"
+    restart: unless-stopped
+    depends_on:
+      mariadb:
+        condition: service_healthy
+    networks:
+      - ticketz-docker-acme_nginx-proxy
+
+  mariadb:
+    image: mariadb:10.11
+    container_name: ${PROJECT_NAME}-db
+    restart: unless-stopped
+    environment:
+      - MARIADB_ROOT_PASSWORD=${DB_ROOT_PASS}
+      - MARIADB_DATABASE=${DB_NAME}
+      - MARIADB_USER=${DB_USER}
+      - MARIADB_PASSWORD=${DB_PASS}
+      - TZ=${TZ:-UTC}
+    volumes:
+      - db_data:/var/lib/mysql
+      - ./sql/init.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 --silent || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    networks:
+      - ticketz-docker-acme_nginx-proxy
+
+volumes:
+  db_data:
+    driver: local
+
+networks:
+  ticketz-docker-acme_nginx-proxy:
+    external: true

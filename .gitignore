@@ -1,0 +1,53 @@
+# ============================
+#  Arquivos sensíveis
+# ============================
+.env
+.env.local
+.env.*.local
+
+# ============================
+#  Composer
+# ============================
+/vendor/
+/composer.lock
+
+# ============================
+#  Cache e logs
+# ============================
+/app/storage/cache/
+/app/storage/logs/
+/app/storage/sessions/
+/app/storage/views/
+
+# ============================
+#  Docker
+# ============================
+/db_data/
+/docker/*.log
+
+# ============================
+#  Sistema operacional
+# ============================
+.DS_Store
+Thumbs.db
+
+# ============================
+#  IDEs
+# ============================
+# VSCode
+.vscode/
+
+# PHPStorm / JetBrains
+.idea/
+
+# ============================
+#  Scripts temporários
+# ============================
+*.bak
+*.tmp
+*.swp
+
+# ============================
+#  Arquivos gerados
+# ============================
+/backup_*/
